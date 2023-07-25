@@ -2,7 +2,7 @@ from collections import defaultdict
 from typing import List
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
-
+import argparse
 
 from file_cache import FileCache
 from github_client import GithubClient
@@ -45,45 +45,48 @@ def get_repository_by_commit(gh_client: GithubClient, cache: FileCache, reposito
     return find_repo
 
 
-def get_dates_since(date_str):
+def get_dates_between(start_date_str, end_date, interval):
     date_format = "%Y-%m-%d"
     output_format = "%Y-%m-%dT%H:%M:%SZ"
 
     # Parse the input date string
-    start_date = datetime.strptime(date_str, date_format).date()
+    start_date = datetime.strptime(start_date_str, date_format).date()
 
-    # Get the current date
-    end_date = datetime.now().date()
+    # Convert end date to date if string
+    if type(end_date) is str:
+        end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
     # Calculate the difference in days
     days_diff = (end_date - start_date).days
 
     # Generate the list of dates
     date_list = []
-    for i in range(0, days_diff + 1, 14):
+    for i in range(0, days_diff + 1, int(interval)):
         date_item = start_date + timedelta(days=i)
-        date_str = date_item.strftime(output_format)
-        date_list.append(date_str)
+        start_date_str = date_item.strftime(output_format)
+        date_list.append(start_date_str)
 
     return date_list
 
 
-if __name__ == '__main__':
-    print("starting")
-    repo = "open-telemetry/opentelemetry-java-instrumentation"
-
+def main(args):
     client = GithubClient()
 
     commit_cache = FileCache(COMMIT_CACHE_FILE)
     repo_cache = FileCache(REPO_CACHE_FILE)
 
-    timeframe = get_dates_since("2022-11-15")
+    timeframe = get_dates_between(args.start, datetime.now().date(), args.interval)
     result = defaultdict(dict)
 
     for snapshot in timeframe:
         try:
-            commit = get_commit_by_date(gh_client=client, cache=commit_cache, date=snapshot, repository=repo)
-            repo_files = get_repository_by_commit(gh_client=client, cache=repo_cache, repository=repo, commit=commit)
+            commit = get_commit_by_date(gh_client=client, cache=commit_cache, date=snapshot, repository=args.repo)
+            repo_files = get_repository_by_commit(
+                gh_client=client,
+                cache=repo_cache,
+                repository=args.repo,
+                commit=commit
+            )
             count = count_by_file_type(repo_files["files"])
             if count:
                 result[snapshot] = {
@@ -115,3 +118,13 @@ if __name__ == '__main__':
     plt.legend()
     plt.tight_layout()
     plt.show()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Migration Tracker')
+    parser.add_argument("-r", "--repo", help="Repository name. ex: open-telemetry/opentelemetry-java-instrumentation",
+                        required=True)
+    parser.add_argument("-s", "--start", help="Starting Date (will calculate from this date until now)", required=True)
+    parser.add_argument("-i", "--interval", help="Interval (in days) between data points", required=True)
+    arguments = parser.parse_args()
+    main(arguments)

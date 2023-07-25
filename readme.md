@@ -9,13 +9,23 @@ A github token is not required but it is recommended as you will get rate limite
 ```
 export GITHUB_TOKEN="insert-your-token"
 pip install -r requirements.txt
-python main.py
 ```
 
-## Example:
+## Arguments
+
+| Argument   | Command        | Description                                                                | Example                                                    |
+|------------|----------------|----------------------------------------------------------------------------|------------------------------------------------------------|
+| Repository | -r, --repo     | Repository name.                                                           | --repo "open-telemetry/opentelemetry-java-instrumentation" |
+| Start Date | -s, --start    | Starting Date in format %Y-%m-%d (will calculate from this date until now) | --start "2022-11-15"                                       |
+| Interval   | -i, --interval | Interval (in days) between data points                                     | --interval 14                                              |
+
+
+## Example Usage:
 
 In the `open-telemetry/opentelemetry-java-instrumentation` repository, track the conversion of tests from groovy to java 
-in the `instrumentation` directory.
+in the `instrumentation` directory starting from 2022-11-15 with a data point every 2 weeks.
+
+`python main.py -r "open-telemetry/opentelemetry-java-instrumentation" -s "2022-11-15" -i 14`
 
 Output: 
 
@@ -24,6 +34,7 @@ Output:
 ## Approach
 
 - Query Github for point in time snapshots based on commits around times spanning a timeframe
+  - Get one data point every `interval` (example: every 14 days)
   - Cache this data locally to avoid repeated api calls
 - Parse out counts of files that match criteria at each snapshot
 - Generate Graph to show results over time frame
