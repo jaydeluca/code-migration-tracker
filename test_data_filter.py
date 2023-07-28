@@ -17,13 +17,16 @@ class ParseDataTestCase(unittest.TestCase):
         with open("test_mocks/tree_data.json", 'r') as file:
             data = json.load(file)
 
-            data_filter = DataFilter(file_extensions=self.file_extensions, path_prefix="instrumentation/", keyword="test")
+            data_filter = DataFilter(file_extensions=self.file_extensions,
+                                     path_prefix="instrumentation/", keyword="test")
 
             test = data_filter.parse_data(payload=data)
 
             expects = set()
-            expects.add("instrumentation/src/main/java/instrumentation/TestFailableCallable.java")
-            expects.add("instrumentation/src/main/java/instrumentation/TestInstrumentationModule.java")
+            expects.add(
+                "instrumentation/src/main/java/instrumentation/TestFailableCallable.java")
+            expects.add(
+                "instrumentation/src/main/java/instrumentation/TestInstrumentationModule.java")
             self.assertEqual(set(test['files']), expects)
 
     def test_given_url_with_different_case_than_keyword_still_filters_correctly(self):
@@ -41,10 +44,11 @@ class ParseDataTestCase(unittest.TestCase):
         """
         data = json.loads(payload)
 
-        data_filter = DataFilter(file_extensions=self.file_extensions, path_prefix="instrumentation/", keyword="test")
+        data_filter = DataFilter(file_extensions=self.file_extensions,
+                                 path_prefix="instrumentation/", keyword="test")
 
         test = data_filter.parse_data(payload=data)
 
-        expects = ["instrumentation/src/main/java/instrumentation/TestFailableCallable.java"]
+        expects = [
+            "instrumentation/src/main/java/instrumentation/TestFailableCallable.java"]
         self.assertEqual(expects, test['files'])
-

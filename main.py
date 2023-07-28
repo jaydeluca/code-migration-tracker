@@ -30,7 +30,8 @@ def get_commit_by_date(gh_client: GithubClient, cache: FileCache, repository, da
     return find_commit
 
 
-def get_repository_by_commit(gh_client: GithubClient, cache: FileCache, repository, commit):
+def get_repository_by_commit(gh_client: GithubClient, cache: FileCache, repository,
+                             commit):
     find_repo = cache.retrieve_value(commit)
 
     if not find_repo:
@@ -80,14 +81,16 @@ def main(args):
 
     for snapshot in timeframe:
         try:
-            commit = get_commit_by_date(gh_client=client, cache=commit_cache, date=snapshot, repository=args.repo)
+            commit = get_commit_by_date(gh_client=client, cache=commit_cache,
+                                        date=snapshot, repository=args.repo)
             repo_files = get_repository_by_commit(
                 gh_client=client,
                 cache=repo_cache,
                 repository=args.repo,
                 commit=commit
             )
-            count = count_by_file_extension(files=repo_files["files"], file_extensions=file_extensions)
+            count = count_by_file_extension(files=repo_files["files"],
+                                            file_extensions=file_extensions)
             if count:
                 result[snapshot] = {
                     "date": snapshot,
@@ -122,9 +125,14 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Migration Tracker')
-    parser.add_argument("-r", "--repo", help="Repository name. ex: open-telemetry/opentelemetry-java-instrumentation",
+    parser.add_argument("-r", "--repo",
+                        help="Repository name. "
+                             "ex: open-telemetry/opentelemetry-java-instrumentation",
                         required=True)
-    parser.add_argument("-s", "--start", help="Starting Date (will calculate from this date until now)", required=True)
-    parser.add_argument("-i", "--interval", help="Interval (in days) between data points", required=True)
+    parser.add_argument("-s", "--start",
+                        help="Starting Date (will calculate from this date until now)",
+                        required=True)
+    parser.add_argument("-i", "--interval",
+                        help="Interval (in days) between data points", required=True)
     arguments = parser.parse_args()
     main(arguments)

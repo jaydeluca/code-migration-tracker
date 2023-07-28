@@ -29,7 +29,9 @@ class DataFilter:
         data_result = []
         tree = payload["tree"]
         for i in tree:
-            if self.matches_meta(i) and self.matches_file_extensions(i["path"]) and self.matches_directory(i["path"]):
+            if self.matches_meta(i) \
+                    and self.matches_file_extensions(i["path"]) \
+                    and self.matches_directory(i["path"]):
                 data_result.append(i["path"])
 
         json_result = {
