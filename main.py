@@ -10,16 +10,11 @@ from github_client import GithubClient
 COMMIT_CACHE_FILE = 'cache/date-commit-cache.json'
 REPO_CACHE_FILE = 'cache/repo-cache.json'
 
-EXTENSIONS = [
-    ".java",
-    ".groovy"
-]
 
-
-def count_by_file_type(files: List[str]) -> dict:
+def count_by_file_extension(files: List[str], file_extensions: List[str]) -> dict:
     file_counts = defaultdict(int)
     for file in files:
-        for ext in EXTENSIONS:
+        for ext in file_extensions:
             if file.endswith(ext):
                 file_counts[ext] += 1
     return file_counts
@@ -72,6 +67,11 @@ def get_dates_between(start_date_str, end_date, interval):
 def main(args):
     client = GithubClient()
 
+    file_extensions = [
+        ".java",
+        ".groovy"
+    ]
+
     commit_cache = FileCache(COMMIT_CACHE_FILE)
     repo_cache = FileCache(REPO_CACHE_FILE)
 
@@ -87,7 +87,7 @@ def main(args):
                 repository=args.repo,
                 commit=commit
             )
-            count = count_by_file_type(repo_files["files"])
+            count = count_by_file_extension(files=repo_files["files"], file_extensions=file_extensions)
             if count:
                 result[snapshot] = {
                     "date": snapshot,

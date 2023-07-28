@@ -35,6 +35,10 @@ Output:
 
 - Query Github for point in time snapshots based on commits around times spanning a timeframe
   - Get one data point every `interval` (example: every 14 days)
+  - Filter based on some criteria
   - Cache this data locally to avoid repeated api calls
-- Parse out counts of files that match criteria at each snapshot
 - Generate Graph to show results over time frame
+
+
+## Data Filters
+
