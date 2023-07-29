@@ -1,10 +1,5 @@
 from typing import List
 
-# EXTENSIONS = [
-#     ".java",
-#     ".groovy"
-# ]
-
 
 class DataFilter:
 

@@ -1,3 +1,5 @@
 requests
 matplotlib
 argparse
+pytest
+ruff

@@ -8,7 +8,7 @@ A github token is not required but it is recommended as you will get rate limite
 
 ```
 export GITHUB_TOKEN="insert-your-token"
-pip install -r requirements.txt
+make install
 ```
 
 ## Arguments
@@ -30,6 +30,21 @@ in the `instrumentation` directory starting from 2022-11-15 with a data point ev
 Output: 
 
 ![Example](./media/example_output.png)
+
+
+## Test / linting
+
+```
+# Make sure you install pytest and ruff
+make install
+
+# Tests
+make test
+
+# Linting
+make lint
+```
+
 
 ## Approach
 
