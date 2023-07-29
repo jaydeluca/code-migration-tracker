@@ -26,7 +26,7 @@
             "url": "https://api.github.com/repos/open-telemetry/opentelemetry-java-instrumentation/git/trees/d83d121e48b61cd9de2a7c78940cf88fc0c07c05"
         },
         {
-            "path": "instrumentation/internal/internal-class-loader/javaagent-integration-tests/src/main/java/instrumentation/TestFailableCallable.java",
+            "path": "instrumentation/src/main/java/instrumentation/TestFailableCallable.java",
             "mode": "100644",
             "type": "blob",
             "sha": "7ce45826964d8da9d33d196de1265abff5aa28d2",
@@ -34,7 +34,7 @@
             "url": "https://api.github.com/repos/open-telemetry/opentelemetry-java-instrumentation/git/blobs/7ce45826964d8da9d33d196de1265abff5aa28d2"
         },
         {
-            "path": "instrumentation/internal/internal-class-loader/javaagent-integration-tests/src/main/java/instrumentation/TestInstrumentationModule.java",
+            "path": "instrumentation/src/main/java/instrumentation/TestInstrumentationModule.java",
             "mode": "100644",
             "type": "blob",
             "sha": "e4044ababaa7ff7bd635158f8d90ee5c3894ed21",

@@ -8,7 +8,7 @@ A github token is not required but it is recommended as you will get rate limite
 
 ```
 export GITHUB_TOKEN="insert-your-token"
-pip install -r requirements.txt
+make install
 ```
 
 ## Arguments
@@ -31,10 +31,29 @@ Output:
 
 ![Example](./media/example_output.png)
 
+
+## Test / linting
+
+```
+# Make sure you install pytest and ruff
+make install
+
+# Tests
+make test
+
+# Linting
+make lint
+```
+
+
 ## Approach
 
 - Query Github for point in time snapshots based on commits around times spanning a timeframe
   - Get one data point every `interval` (example: every 14 days)
+  - Filter based on some criteria
   - Cache this data locally to avoid repeated api calls
-- Parse out counts of files that match criteria at each snapshot
 - Generate Graph to show results over time frame
+
+
+## Data Filters
+

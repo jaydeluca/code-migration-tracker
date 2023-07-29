@@ -1,39 +1,6 @@
 import requests
 import os
 
-EXTENSIONS = [
-    ".java",
-    ".groovy"
-]
-
-
-def matches_extensions(path: str):
-    for ext in EXTENSIONS:
-        if path.endswith(ext):
-            return True
-    return False
-
-
-def matches_directory(path: str):
-    return path.startswith("instrumentation/")
-
-
-def matches_meta(item):
-    return item["type"] == "blob" and "test" in item["path"]
-
-
-def parse_data(payload):
-    data_result = []
-    tree = payload["tree"]
-    for i in tree:
-        if matches_meta(i) and matches_extensions(i["path"]) and matches_directory(i["path"]):
-            data_result.append(i["path"])
-
-    json_result = {
-        "files": data_result
-    }
-    return json_result
-
 
 class GithubClient(object):
 
@@ -79,8 +46,7 @@ class GithubClient(object):
         response = self._get(api_url)
 
         if response.status_code == 200:
-            return parse_data(response.json())
+            return response.json()
         else:
             print(f"Error: {response.status_code}")
             return None
-
