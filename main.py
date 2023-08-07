@@ -1,26 +1,17 @@
 from collections import defaultdict
-from typing import List
-from datetime import datetime, timedelta
+from datetime import datetime
 import matplotlib.pyplot as plt
 import argparse
+from utilities import count_by_file_extension, get_dates_between
 
-from file_cache import FileCache
+from single_file_cache import SingleFileCache
 from github_client import GithubClient
 
 COMMIT_CACHE_FILE = 'cache/date-commit-cache.json'
 REPO_CACHE_FILE = 'cache/repo-cache.json'
 
 
-def count_by_file_extension(files: List[str], file_extensions: List[str]) -> dict:
-    file_counts = defaultdict(int)
-    for file in files:
-        for ext in file_extensions:
-            if file.endswith(ext):
-                file_counts[ext] += 1
-    return file_counts
-
-
-def get_commit_by_date(gh_client: GithubClient, cache: FileCache, repository, date):
+def get_commit_by_date(gh_client: GithubClient, cache: SingleFileCache, repository, date):
     find_commit = cache.retrieve_value(date)
     if not find_commit:
         find_commit = gh_client.get_most_recent_commit(repository, date)
@@ -30,7 +21,7 @@ def get_commit_by_date(gh_client: GithubClient, cache: FileCache, repository, da
     return find_commit
 
 
-def get_repository_by_commit(gh_client: GithubClient, cache: FileCache, repository,
+def get_repository_by_commit(gh_client: GithubClient, cache: SingleFileCache, repository,
                              commit):
     find_repo = cache.retrieve_value(commit)
 
@@ -41,30 +32,6 @@ def get_repository_by_commit(gh_client: GithubClient, cache: FileCache, reposito
     return find_repo
 
 
-def get_dates_between(start_date_str, end_date, interval):
-    date_format = "%Y-%m-%d"
-    output_format = "%Y-%m-%dT%H:%M:%SZ"
-
-    # Parse the input date string
-    start_date = datetime.strptime(start_date_str, date_format).date()
-
-    # Convert end date to date if string
-    if type(end_date) is str:
-        end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-
-    # Calculate the difference in days
-    days_diff = (end_date - start_date).days
-
-    # Generate the list of dates
-    date_list = []
-    for i in range(0, days_diff + 1, int(interval)):
-        date_item = start_date + timedelta(days=i)
-        start_date_str = date_item.strftime(output_format)
-        date_list.append(start_date_str)
-
-    return date_list
-
-
 def main(args):
     client = GithubClient()
 
@@ -73,8 +40,8 @@ def main(args):
         ".groovy"
     ]
 
-    commit_cache = FileCache(COMMIT_CACHE_FILE)
-    repo_cache = FileCache(REPO_CACHE_FILE)
+    commit_cache = SingleFileCache(COMMIT_CACHE_FILE)
+    repo_cache = SingleFileCache(REPO_CACHE_FILE)
 
     timeframe = get_dates_between(args.start, datetime.now().date(), args.interval)
     result = defaultdict(dict)
