@@ -11,7 +11,7 @@ def get_dates_between(start_date_str, end_date, interval):
     start_date = datetime.strptime(start_date_str, date_format).date()
 
     # Convert end date to date if string
-    if type(end_date) is str:
+    if isinstance(end_date, str):
         end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
 
     # Calculate the difference in days
