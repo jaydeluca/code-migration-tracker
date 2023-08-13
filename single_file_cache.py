@@ -2,7 +2,7 @@ import os
 import json
 
 
-class FileCache:
+class SingleFileCache:
     def __init__(self, location):
         self.location = location
         if not os.path.exists(location):

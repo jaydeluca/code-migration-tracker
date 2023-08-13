@@ -4,7 +4,7 @@ install:
 
 .PHONY: test
 test:
-	pytest
+	pytest --cov=./ --cov-config=.coveragerc
 
 .PHONY: lint
 lint:

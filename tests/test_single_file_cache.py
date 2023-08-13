@@ -1,11 +1,11 @@
 import unittest
 
-from file_cache import FileCache
+from single_file_cache import SingleFileCache
 
 
-class FileCacheTestCase(unittest.TestCase):
-    def test_add(self):
-        cache = FileCache("test-cache")
+class SingleFileCacheTestCase(unittest.TestCase):
+    def test_single_file_add(self):
+        cache = SingleFileCache("test-cache")
         cache.add_to_cache("test", "value")
 
         self.assertEqual("value", cache.retrieve_value("test"))
@@ -13,8 +13,8 @@ class FileCacheTestCase(unittest.TestCase):
 
         cache.delete_cache()
 
-    def test_does_not_exist_returns_none(self):
-        cache = FileCache("test-cache")
+    def test_single_file_does_not_exist_returns_none(self):
+        cache = SingleFileCache("test-cache")
         self.assertEqual(None, cache.retrieve_value("test"))
         cache.delete_cache()
 

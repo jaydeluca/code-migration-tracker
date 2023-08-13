@@ -2,4 +2,5 @@ requests
 matplotlib
 argparse
 pytest
+pytest-cov
 ruff
