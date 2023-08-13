@@ -1,58 +1,68 @@
 from collections import defaultdict
 from datetime import datetime
+from typing import List
+
 import matplotlib.pyplot as plt
 import argparse
+
+from data_filter import DataFilter
+from multi_file_cache import MultiFileCache
 from utilities import count_by_file_extension, get_dates_between
 
 from single_file_cache import SingleFileCache
 from github_client import GithubClient
 
 COMMIT_CACHE_FILE = 'cache/date-commit-cache.json'
-REPO_CACHE_FILE = 'cache/repo-cache.json'
+REPO_CACHE_FILE = 'cache/repo-cache'
 
 
-def get_commit_by_date(gh_client: GithubClient, cache: SingleFileCache, repository, date):
-    find_commit = cache.retrieve_value(date)
-    if not find_commit:
-        find_commit = gh_client.get_most_recent_commit(repository, date)
-        if find_commit:
-            cache.add_to_cache(date, find_commit)
+class App:
+    def __init__(self, file_extensions: List[str], path_prefix: str, keyword: str):
+        self.client = GithubClient()
+        self.data_filter = DataFilter(file_extensions=file_extensions,
+                                      path_prefix=path_prefix, keyword=keyword)
+        self.commit_cache = SingleFileCache(location=COMMIT_CACHE_FILE)
+        self.repo_cache = MultiFileCache(location=REPO_CACHE_FILE)
 
-    return find_commit
+    def get_commit_by_date(self, repository, date):
+        find_commit = self.commit_cache.retrieve_value(date)
+        if not find_commit:
+            find_commit = self.client.get_most_recent_commit(repository, date)
+            if find_commit:
+                self.commit_cache.add_to_cache(date, find_commit)
 
+        return find_commit
 
-def get_repository_by_commit(gh_client: GithubClient, cache: SingleFileCache, repository,
-                             commit):
-    find_repo = cache.retrieve_value(commit)
+    def get_repository_by_commit(self, repository, commit):
+        find_repo = self.repo_cache.retrieve_value(commit)
 
-    if not find_repo:
-        find_repo = gh_client.get_repository_at_commit(repository, commit)
-        cache.add_to_cache(commit, find_repo)
+        if not find_repo:
+            find_repo = self.client.get_repository_at_commit(repository, commit)
+            cleaned = self.data_filter.parse_data(find_repo)
+            self.repo_cache.add_to_cache(commit, cleaned)
 
-    return find_repo
+        return cleaned
 
 
 def main(args):
-    client = GithubClient()
-
     file_extensions = [
         ".java",
         ".groovy"
     ]
 
-    commit_cache = SingleFileCache(COMMIT_CACHE_FILE)
-    repo_cache = SingleFileCache(REPO_CACHE_FILE)
+    app = App(
+        file_extensions=file_extensions,
+        path_prefix="instrumentation/",
+        keyword="test"
+    )
 
     timeframe = get_dates_between(args.start, datetime.now().date(), args.interval)
     result = defaultdict(dict)
 
     for snapshot in timeframe:
         try:
-            commit = get_commit_by_date(gh_client=client, cache=commit_cache,
-                                        date=snapshot, repository=args.repo)
-            repo_files = get_repository_by_commit(
-                gh_client=client,
-                cache=repo_cache,
+            commit = app.get_commit_by_date(date=snapshot, repository=args.repo)
+            repo_files = app.get_repository_by_commit(
                 repository=args.repo,
                 commit=commit
             )

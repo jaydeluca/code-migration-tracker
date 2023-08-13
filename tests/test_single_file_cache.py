@@ -3,7 +3,7 @@ import unittest
 from single_file_cache import SingleFileCache
 
 
-class FileCacheTestCase(unittest.TestCase):
+class SingleFileCacheTestCase(unittest.TestCase):
     def test_single_file_add(self):
         cache = SingleFileCache("test-cache")
         cache.add_to_cache("test", "value")
