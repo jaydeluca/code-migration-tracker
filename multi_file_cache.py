@@ -18,7 +18,7 @@ class MultiFileCache:
     # Overwrites previous values
     def add_to_cache(self, key, value):
         with open(self._generate_filename(key), 'w') as file:
-            file.write(str(value))
+            json.dump(value, file)
 
     def retrieve_value(self, key):
         if os.path.exists(self._generate_filename(key)):
