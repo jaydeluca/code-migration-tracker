@@ -34,14 +34,14 @@ class App:
         return find_commit
 
     def get_repository_by_commit(self, repository, commit):
-        find_repo = self.repo_cache.retrieve_value(commit)
+        repo_data = self.repo_cache.retrieve_value(commit)
 
-        if not find_repo:
-            find_repo = self.client.get_repository_at_commit(repository, commit)
-            cleaned = self.data_filter.parse_data(find_repo)
-            self.repo_cache.add_to_cache(commit, cleaned)
+        if not repo_data:
+            repo_data = self.client.get_repository_at_commit(repository, commit)
+            repo_data = self.data_filter.parse_data(repo_data)
+            self.repo_cache.add_to_cache(commit, repo_data)
 
-        return cleaned
+        return repo_data
 
 
 def main(args):
