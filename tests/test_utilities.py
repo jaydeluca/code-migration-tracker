@@ -45,14 +45,14 @@ class TestUtilities(TestCase):
             "test6.txt"
         ]
 
-        extensions = [
-            ".java",
-            ".groovy",
-            ".txt"
+        languages = [
+            "java",
+            "groovy",
+            "txt"
         ]
 
-        result = count_by_file_extension(files, extensions)
-        self.assertEqual(3, result['.java'])
-        self.assertEqual(2, result['.groovy'])
-        self.assertEqual(1, result['.txt'])
+        result = count_by_file_extension(files, languages)
+        self.assertEqual(3, result['java'])
+        self.assertEqual(2, result['groovy'])
+        self.assertEqual(1, result['txt'])
 
