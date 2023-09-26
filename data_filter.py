@@ -3,14 +3,14 @@ from typing import List
 
 class DataFilter:
 
-    def __init__(self, file_extensions: List[str], path_prefix: str, keyword: str):
-        self.file_extensions = file_extensions
+    def __init__(self, languages: List[str], path_prefix: str, keyword: str):
+        self.languages = languages
         self.path_prefix = path_prefix
         self.keyword = keyword
 
     def matches_file_extensions(self, path: str) -> bool:
-        for ext in self.file_extensions:
-            if path.endswith(ext):
+        for ext in self.languages:
+            if path.endswith(f".{ext.lower()}"):
                 return True
         return False
 

@@ -17,9 +17,9 @@ REPO_CACHE_FILE = 'cache/repo-cache'
 
 
 class App:
-    def __init__(self, file_extensions: List[str], path_prefix: str, keyword: str):
+    def __init__(self, languages: List[str], path_prefix: str, keyword: str):
         self.client = GithubClient()
-        self.data_filter = DataFilter(file_extensions=file_extensions,
+        self.data_filter = DataFilter(languages=languages,
                                       path_prefix=path_prefix, keyword=keyword)
         self.commit_cache = SingleFileCache(location=COMMIT_CACHE_FILE)
         self.repo_cache = MultiFileCache(location=REPO_CACHE_FILE)
@@ -45,13 +45,12 @@ class App:
 
 
 def main(args):
-    file_extensions = [
-        ".java",
-        ".groovy"
+    languages = [
+        "groovy"
     ]
 
     app = App(
-        file_extensions=file_extensions,
+        languages=languages,
         path_prefix="instrumentation/",
         keyword="test"
     )
@@ -67,30 +66,29 @@ def main(args):
                 commit=commit
             )
             count = count_by_file_extension(files=repo_files["files"],
-                                            file_extensions=file_extensions)
+                                            languages=languages)
             if count:
-                result[snapshot] = {
-                    "date": snapshot,
-                    "java": count[".java"],
-                    "groovy": count[".groovy"]
-                }
+                result[snapshot]["date"] = snapshot
+                for language in languages:
+                    result[snapshot][language] = count[language]
         except Exception as e:
             print(f"Error for {snapshot}, {e}")
 
     dates = []
-    java_counts = []
-    groovy_counts = []
+
+    language_counts = {}
 
     for item in result.values():
-        date = item["date"][:10]
-        java_count = item["java"]
-        groovy_count = item["groovy"]
-        dates.append(date)
-        java_counts.append(java_count)
-        groovy_counts.append(groovy_count)
+        dates.append(item["date"][:10])
+        for language in languages:
+            try:
+                language_counts[language].append(item[language])
+            except KeyError:
+                language_counts[language] = [item[language]]
 
-    plt.plot(dates, java_counts, label='Java')
-    plt.plot(dates, groovy_counts, label='Groovy')
+    for lang, counts in language_counts.items():
+        plt.plot(dates, counts, label=lang.capitalize())
+
     plt.xlabel('Date')
     plt.ylabel('Count')
     plt.title('Test Classes by Lang in Instrumentation Directory')
