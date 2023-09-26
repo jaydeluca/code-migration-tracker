@@ -27,10 +27,11 @@ def get_dates_between(start_date_str, end_date, interval):
     return date_list
 
 
-def count_by_file_extension(files: List[str], file_extensions: List[str]) -> dict:
+def count_by_file_extension(files: List[str], languages: List[str]) -> dict:
     file_counts = defaultdict(int)
     for file in files:
-        for ext in file_extensions:
-            if file.endswith(ext):
+        for ext in languages:
+            extension = f".{ext.lower()}"
+            if file.endswith(extension):
                 file_counts[ext] += 1
     return file_counts

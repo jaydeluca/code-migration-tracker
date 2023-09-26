@@ -7,9 +7,9 @@ from data_filter import DataFilter
 class ParseDataTestCase(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
-        self.file_extensions = [
-            ".java",
-            ".groovy"
+        self.languages = [
+            "java",
+            "groovy"
         ]
         super(ParseDataTestCase, self).__init__(*args, **kwargs)
 
@@ -84,7 +84,7 @@ class ParseDataTestCase(unittest.TestCase):
         """
         data = json.loads(test_json)
 
-        data_filter = DataFilter(file_extensions=self.file_extensions,
+        data_filter = DataFilter(languages=self.languages,
                                  path_prefix="instrumentation/", keyword="test")
 
         test = data_filter.parse_data(payload=data)
@@ -111,7 +111,7 @@ class ParseDataTestCase(unittest.TestCase):
         """
         data = json.loads(payload)
 
-        data_filter = DataFilter(file_extensions=self.file_extensions,
+        data_filter = DataFilter(languages=self.languages,
                                  path_prefix="instrumentation/", keyword="test")
 
         test = data_filter.parse_data(payload=data)
