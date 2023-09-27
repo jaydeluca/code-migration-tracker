@@ -7,7 +7,7 @@ import argparse
 
 from data_filter import DataFilter
 from multi_file_cache import MultiFileCache
-from utilities import count_by_file_extension, get_dates_between
+from utilities import count_by_file_extension, get_dates_between, convert_to_plot
 
 from single_file_cache import SingleFileCache
 from github_client import GithubClient
@@ -27,7 +27,7 @@ class App:
     def get_commit_by_date(self, repository, date):
         find_commit = self.commit_cache.retrieve_value(date)
         if not find_commit:
-            find_commit = self.client.get_most_recent_commit(repository, date)
+            find_commit = self.client.get_most_recent_commit(repository, date, "main")
             if find_commit:
                 self.commit_cache.add_to_cache(date, find_commit)
 
@@ -74,9 +74,7 @@ def main(args):
         except Exception as e:
             print(f"Error for {snapshot}, {e}")
 
-    dates = []
-
-    language_counts = {}
+    dates, language_counts = convert_to_plot(result, languages)
 
     for item in result.values():
         dates.append(item["date"][:10])

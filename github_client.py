@@ -1,3 +1,5 @@
+import base64
+
 import requests
 import os
 
@@ -17,13 +19,14 @@ class GithubClient(object):
         except Exception as e:
             print(e)
 
-    def get_most_recent_commit(self, repo, timestamp) -> requests.models.Response:
+    def get_most_recent_commit(self, repo: str, timestamp: str, branch: str) -> requests.models.Response:
         api_url = f"{self.base_url}/repos/{repo}/commits"
 
         params = {
             "per_page": 1,
             "until": timestamp,
-            "order": "desc"
+            "order": "desc",
+            "sha": branch
         }
 
         response = self._get(api_url, params=params)
@@ -40,13 +43,27 @@ class GithubClient(object):
             print(f"Error: {response.status_code}")
             return None
 
-    def get_repository_at_commit(self, repository, commit_sha):
+    def get_repository_at_commit(self, repository: str, commit_sha: str):
         api_url = f"{self.base_url}/repos/{repository}/git/trees/{commit_sha}?recursive=1"
 
         response = self._get(api_url)
 
         if response.status_code == 200:
             return response.json()
+        else:
+            print(f"Error: {response.status_code}")
+            return None
+
+    def get_file_at_commit(self, repository: str, filepath: str, commit_sha: str):
+        api_url = f"{self.base_url}/repos/{repository}/contents/{filepath}"
+
+        response = self._get(api_url, params={"ref": commit_sha})
+
+        if response.status_code == 200:
+            # File content is base64 encoded, decode it
+            content = response.json().get("content", "")
+            content = base64.b64decode(content)
+            return str(content, encoding='utf-8')
         else:
             print(f"Error: {response.status_code}")
             return None
