@@ -35,3 +35,16 @@ def count_by_file_extension(files: List[str], languages: List[str]) -> dict:
             if file.endswith(extension):
                 file_counts[ext] += 1
     return file_counts
+
+
+def convert_to_plot(input_dict: dict, items):
+    result = {}
+    dates = []
+    for entry in input_dict.values():
+        dates.append(entry["date"][:10])
+        for item in items:
+            try:
+                result[item].append(entry[item])
+            except KeyError:
+                result[item] = [entry[item]]
+    return dates, result

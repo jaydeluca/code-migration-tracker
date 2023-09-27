@@ -1,6 +1,10 @@
-# Code Migration Tracker
+# Repo Metrics
 
-Goal: Given a repository, a timeframe, and any filtering rules, track a goal over time.
+Random collection of tools to pull and visualize various data about a repository as timeseries metrics.
+
+Functionality:
+* Timeseries file count tracking: for tracking migration projects from one language to another.
+* Pull benchmark data and visualize as timeseries
 
 ## Setup
 
@@ -10,27 +14,6 @@ A github token is not required but it is recommended as you will get rate limite
 export GITHUB_TOKEN="insert-your-token"
 make install
 ```
-
-## Arguments
-
-| Argument   | Command        | Description                                                                | Example                                                    |
-|------------|----------------|----------------------------------------------------------------------------|------------------------------------------------------------|
-| Repository | -r, --repo     | Repository name.                                                           | --repo "open-telemetry/opentelemetry-java-instrumentation" |
-| Start Date | -s, --start    | Starting Date in format %Y-%m-%d (will calculate from this date until now) | --start "2022-11-15"                                       |
-| Interval   | -i, --interval | Interval (in days) between data points                                     | --interval 14                                              |
-
-
-## Example Usage:
-
-In the `open-telemetry/opentelemetry-java-instrumentation` repository, track the conversion of tests from groovy to java 
-in the `instrumentation` directory starting from 2022-11-15 with a data point every 2 weeks.
-
-`python main.py -r "open-telemetry/opentelemetry-java-instrumentation" -s "2022-11-15" -i 14`
-
-Output: 
-
-![Example](./media/example_output.png)
-
 
 ## Test / linting
 
@@ -46,6 +29,52 @@ make lint
 ```
 
 
+## File Count Tracking
+
+### Arguments
+
+| Argument   | Command        | Description                                                                | Example                                                    |
+|------------|----------------|----------------------------------------------------------------------------|------------------------------------------------------------|
+| Repository | -r, --repo     | Repository name.                                                           | --repo "open-telemetry/opentelemetry-java-instrumentation" |
+| Start Date | -s, --start    | Starting Date in format %Y-%m-%d (will calculate from this date until now) | --start "2022-11-15"                                       |
+| Interval   | -i, --interval | Interval (in days) between data points                                     | --interval 14                                              |
+
+
+### Example Usage:
+
+In the `open-telemetry/opentelemetry-java-instrumentation` repository, track the conversion of tests from groovy to java 
+in the `instrumentation` directory starting from 2022-11-15 with a data point every 2 weeks.
+
+`python main.py -r "open-telemetry/opentelemetry-java-instrumentation" -s "2022-11-15" -i 14`
+
+Output: 
+
+![Example](./media/example_output.png)
+
+
+## Benchmark Visualization
+
+This is very specific to the open-telemetry/opentelemetry-java-instrumentation repo
+
+### Arguments
+
+| Argument   | Command        | Description                                                                | Example                                                    |
+|------------|----------------|----------------------------------------------------------------------------|------------------------------------------------------------|
+| Repository | -r, --repo     | Repository name.                                                           | --repo "open-telemetry/opentelemetry-java-instrumentation" |
+| Start Date | -s, --start    | Starting Date in format %Y-%m-%d (will calculate from this date until now) | --start "2022-11-15"                                       |
+| Interval   | -i, --interval | Interval (in days) between data points                                     | --interval 14                                              |
+
+
+### Example Usage:
+
+Chart Min and max heap starting from 2022-02-14 with a data point every 30 days.
+
+`python benchmark.py -r "open-telemetry/opentelemetry-java-instrumentation" -s "2022-02-14" -i 30`
+
+Output:
+
+![Example](./media/benchmark_output.png)
+
 ## Approach
 
 - Query Github for point in time snapshots based on commits around times spanning a timeframe
@@ -53,7 +82,4 @@ make lint
   - Filter based on some criteria
   - Cache this data locally to avoid repeated api calls
 - Generate Graph to show results over time frame
-
-
-## Data Filters
 
