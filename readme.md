@@ -33,23 +33,32 @@ make lint
 
 ### Arguments
 
-| Argument   | Command        | Description                                                                | Example                                                    |
-|------------|----------------|----------------------------------------------------------------------------|------------------------------------------------------------|
-| Repository | -r, --repo     | Repository name.                                                           | --repo "open-telemetry/opentelemetry-java-instrumentation" |
-| Start Date | -s, --start    | Starting Date in format %Y-%m-%d (will calculate from this date until now) | --start "2022-11-15"                                       |
-| Interval   | -i, --interval | Interval (in days) between data points                                     | --interval 14                                              |
-
+| Argument   | Command         | Description                                                                | Example                                                    |
+|------------|-----------------|----------------------------------------------------------------------------|------------------------------------------------------------|
+| Repository | -r, --repo      | Repository name.                                                           | --repo "open-telemetry/opentelemetry-java-instrumentation" |
+| Start Date | -s, --start     | Starting Date in format %Y-%m-%d (will calculate from this date until now) | --start "2022-11-15"                                       |
+| Interval   | -i, --interval  | Interval (in days) between data points                                     | --interval 14                                              |
+| Languages  | -l, --languages | Languages to count (in comma separated list)                               | --languages "java,groovy"                                  |
+| Output     | -o, --output    | (Optional) Location where file should be saved                             | --output "./media/example.png"                             |
 
 ### Example Usage:
 
 In the `open-telemetry/opentelemetry-java-instrumentation` repository, track the conversion of tests from groovy to java 
 in the `instrumentation` directory starting from 2022-11-15 with a data point every 2 weeks.
 
-`python main.py -r "open-telemetry/opentelemetry-java-instrumentation" -s "2022-11-15" -i 14`
+`python main.py -r "open-telemetry/opentelemetry-java-instrumentation" -l "groovy,java" -s "2022-11-15" -i 14`
 
 Output: 
 
 ![Example](./media/example_output.png)
+
+Now just groovy
+
+`python main.py -r "open-telemetry/opentelemetry-java-instrumentation" -l "groovy" -s "2022-11-15" -i 14`
+
+Output: 
+
+![Example](./media/example_output2.png)
 
 
 ## Benchmark Visualization
@@ -58,11 +67,11 @@ This is very specific to the open-telemetry/opentelemetry-java-instrumentation r
 
 ### Arguments
 
-| Argument   | Command        | Description                                                                | Example                                                    |
-|------------|----------------|----------------------------------------------------------------------------|------------------------------------------------------------|
-| Repository | -r, --repo     | Repository name.                                                           | --repo "open-telemetry/opentelemetry-java-instrumentation" |
-| Start Date | -s, --start    | Starting Date in format %Y-%m-%d (will calculate from this date until now) | --start "2022-11-15"                                       |
-| Interval   | -i, --interval | Interval (in days) between data points                                     | --interval 14                                              |
+| Argument   | Command         | Description                                                                | Example                                                    |
+|------------|-----------------|----------------------------------------------------------------------------|------------------------------------------------------------|
+| Repository | -r, --repo      | Repository name.                                                           | --repo "open-telemetry/opentelemetry-java-instrumentation" |
+| Start Date | -s, --start     | Starting Date in format %Y-%m-%d (will calculate from this date until now) | --start "2022-11-15"                                       |
+| Interval   | -i, --interval  | Interval (in days) between data points                                     | --interval 14                                              |
 
 
 ### Example Usage:

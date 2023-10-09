@@ -1,6 +1,8 @@
 from collections import defaultdict
 from datetime import datetime
 from typing import List
+import seaborn as sns
+import pandas as pd
 
 import matplotlib.pyplot as plt
 import argparse
@@ -45,9 +47,7 @@ class App:
 
 
 def main(args):
-    languages = [
-        "groovy"
-    ]
+    languages = args.languages.split(",")
 
     app = App(
         languages=languages,
@@ -84,16 +84,53 @@ def main(args):
             except KeyError:
                 language_counts[language] = [item[language]]
 
-    for lang, counts in language_counts.items():
-        plt.plot(dates, counts, label=lang.capitalize())
+    sns.set_style('whitegrid')
+    plt.figure(figsize=(10, 8))
 
-    plt.xlabel('Date')
-    plt.ylabel('Count')
-    plt.title('Test Classes by Lang in Instrumentation Directory')
+    for lang, counts in language_counts.items():
+        df = pd.DataFrame({'Date': dates, 'Count': counts})
+        df['Date'] = pd.to_datetime(df['Date'])
+        sns.lineplot(x='Date', y='Count', label=lang.capitalize(), data=df, marker='o')
+
+        # Find highest and lowest points
+        highest_point = df[df['Count'] == df['Count'].max()]
+        lowest_point = df[df['Count'] == df['Count'].min()]
+
+        # Annotate the highest point
+        plt.annotate(highest_point["Count"].values[0],
+                     xy=(
+                     highest_point['Date'].values[0], highest_point['Count'].values[0]),
+                     xytext=(highest_point['Date'].values[0],
+                             highest_point['Count'].values[0] - 40),
+                     xycoords='data',
+                     textcoords='data',
+                     size=15, va="bottom", ha="left",
+                     arrowprops=dict(arrowstyle="simple",
+                                     connectionstyle="arc3,rad=-0.2"))
+
+        # Annotate lowest point
+        plt.annotate(lowest_point["Count"].values[0],
+                     xy=(
+                     lowest_point['Date'].values[0], lowest_point['Count'].values[0]),
+                     xytext=(lowest_point['Date'].values[0],
+                             lowest_point['Count'].values[0] + 40),
+                     xycoords='data',
+                     textcoords='data',
+                     size=15, va="top", ha="left",
+                     arrowprops=dict(arrowstyle="simple",
+                                     connectionstyle="arc3,rad=-0.2"))
+
+    plt.xlabel('Date', fontsize=14)
+    plt.ylabel('Count', fontsize=14)
+    plt.title('Test File Count by extension in Instrumentation Directory', fontsize=16)
     plt.xticks(rotation=45)
+
     plt.legend()
     plt.tight_layout()
-    plt.show()
+
+    if len(args.output) > 0:
+        plt.savefig(args.output)
+    plt.draw()
 
 
 if __name__ == '__main__':
@@ -107,5 +144,12 @@ if __name__ == '__main__':
                         required=True)
     parser.add_argument("-i", "--interval",
                         help="Interval (in days) between data points", required=True)
+    parser.add_argument("-l", "--languages",
+                        help="Languages (comma separated list, no spaces)."
+                             "ex: groovy,java",
+                        required=True)
+    parser.add_argument("-o", "--output",
+                        help="File name to output graph to (leave blank and no file is generated)."
+                             "ex: file-count.png")
     arguments = parser.parse_args()
     main(arguments)
