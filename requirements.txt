@@ -3,7 +3,7 @@ matplotlib
 argparse
 pytest
 pytest-cov
-ruff
+ruff==0.5.7
 seaborn
 pandas
 tabulate
