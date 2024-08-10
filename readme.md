@@ -84,6 +84,59 @@ Output:
 
 ![Example](./media/benchmark_output.png)
 
+## Detail Count by Instrumentation module
+
+### Arguments
+
+| Argument   | Command        | Description                                    | Example                                                    |
+|------------|----------------|------------------------------------------------|------------------------------------------------------------|
+| Repository | -r, --repo     | Repository name.                               | --repo "open-telemetry/opentelemetry-java-instrumentation" |
+| Language   | -l, --language | Language to get count for                      | --language "groovy"                                        |
+| Output     | -o, --output   | (Optional) Location where file should be saved | --output "./media/example.png"                             |
+
+### Example Usage:
+
+In the `open-telemetry/opentelemetry-java-instrumentation` repository, analyze the files in test directories in the 
+`instrumentation` directory and outputting counts by module.
+
+`python count_by_instrumentation.py -r "open-telemetry/opentelemetry-java-instrumentation" -l "groovy"`
+
+Output: 
+
+| Key               | Value |
+|:------------------|------:|
+| spring            |    52 |
+| jaxrs             |    37 |
+| servlet           |    23 |
+| restlet           |    22 |
+| couchbase         |    18 |
+| aws-sdk           |    17 |
+| ratpack           |    16 |
+| elasticsearch     |    15 |
+| play              |    15 |
+| jaxws             |    15 |
+| vertx             |    14 |
+| mongo             |    10 |
+| jdbc              |     8 |
+| apache-dubbo-2.7  |     7 |
+| jaxrs-client      |     5 |
+| netty             |     5 |
+| apache-httpclient |     3 |
+| opentelemetry-api |     3 |
+| grizzly-2.3       |     3 |
+| grails-3.0        |     3 |
+| undertow-1.4      |     3 |
+| kafka             |     3 |
+| internal          |     2 |
+| dropwizard        |     2 |
+| hibernate         |     1 |
+| rediscala-1.8     |     1 |
+| spymemcached-2.12 |     1 |
+| twilio-6.6        |     1 |
+| Total             |   305 |
+
+![Example](./media/example_pie_output.png)
+
 ## Approach
 
 - Query Github for point in time snapshots based on commits around times spanning a timeframe

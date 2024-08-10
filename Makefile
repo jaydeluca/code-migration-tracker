@@ -8,14 +8,15 @@ test:
 
 .PHONY: lint
 lint:
-	ruff --format=github --select=E9,F63,F7,F82 --target-version=py37 .
-	ruff --format=github --target-version=py37 .
+	ruff check
 
 .PHONY: update-examples
 update-example:
 	pip3 install -r requirements.txt
 	python3 main.py -r "open-telemetry/opentelemetry-java-instrumentation" -l "java,groovy" -s "2022-11-15" -i 14 -o "./media/example_output.png"
 	python3 main.py -r "open-telemetry/opentelemetry-java-instrumentation" -l "groovy" -s "2022-11-15" -i 14 -o "./media/example_output2.png"
+	python3 count_by_instrumentation.py -r "open-telemetry/opentelemetry-java-instrumentation" -l "groovy" -o "./media/example_pie_output.png"
+
 
 
 .PHONY: all
