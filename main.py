@@ -122,7 +122,7 @@ def main(args):
 
     plt.xlabel('Date', fontsize=14)
     plt.ylabel('Count', fontsize=14)
-    plt.title('Test File Count by Language in Instrumentation Directory', fontsize=16)
+    plt.title('Test File Count in Instrumentation Directory', fontsize=16)
     plt.xticks(rotation=45)
 
     plt.legend()

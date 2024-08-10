@@ -6,3 +6,4 @@ pytest-cov
 ruff
 seaborn
 pandas
+tabulate
