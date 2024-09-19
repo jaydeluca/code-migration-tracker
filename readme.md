@@ -103,37 +103,30 @@ In the `open-telemetry/opentelemetry-java-instrumentation` repository, analyze t
 
 Output: 
 
-| Key               | Value |
-|:------------------|------:|
-| spring            |    52 |
-| jaxrs             |    37 |
-| servlet           |    23 |
-| restlet           |    22 |
-| couchbase         |    18 |
-| aws-sdk           |    17 |
-| ratpack           |    16 |
-| elasticsearch     |    15 |
-| play              |    15 |
-| jaxws             |    15 |
-| vertx             |    14 |
-| mongo             |    10 |
-| jdbc              |     8 |
-| apache-dubbo-2.7  |     7 |
-| jaxrs-client      |     5 |
-| netty             |     5 |
-| apache-httpclient |     3 |
-| opentelemetry-api |     3 |
-| grizzly-2.3       |     3 |
-| grails-3.0        |     3 |
-| undertow-1.4      |     3 |
-| kafka             |     3 |
-| internal          |     2 |
-| dropwizard        |     2 |
-| hibernate         |     1 |
-| rediscala-1.8     |     1 |
-| spymemcached-2.12 |     1 |
-| twilio-6.6        |     1 |
-| Total             |   305 |
+| Key               | File Count | Total File Size |
+|:------------------|-----------:|----------------:|
+| servlet           |         23 |          143182 |
+| aws-sdk           |         17 |          127827 |
+| jdbc              |          8 |           90890 |
+| elasticsearch     |         15 |           90341 |
+| jaxrs             |         37 |           72352 |
+| vertx             |         14 |           56845 |
+| ratpack           |         16 |           51932 |
+| mongo             |         10 |           51661 |
+| play              |         15 |           48986 |
+| restlet           |         22 |           38226 |
+| jaxws             |         17 |           21595 |
+| kafka             |          3 |           21505 |
+| twilio-6.6        |          1 |           18936 |
+| jaxrs-client      |          5 |           16067 |
+| spymemcached-2.12 |          1 |           15630 |
+| undertow-1.4      |          3 |           12754 |
+| hibernate         |          1 |           12167 |
+| dropwizard        |          2 |           10789 |
+| rediscala-1.8     |          1 |            3898 |
+| grails-3.0        |          3 |            3201 |
+| internal          |          2 |            2603 |
+| Total             |        216 |          911387 |
 
 ![Example](./media/example_pie_output.png)
 

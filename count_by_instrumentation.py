@@ -23,7 +23,7 @@ class App:
 
     def get_repository_by_commit(self, repository, commit):
         repo_data = self.client.get_repository_at_commit(repository, commit)
-        repo_data = self.data_filter.parse_data(repo_data)
+        repo_data = self.data_filter.get_file_counts_and_lengths(repo_data)
 
         return repo_data
 
@@ -42,25 +42,32 @@ def main(args):
         repository=args.repo,
         commit=commit
     )
-    count = count_by_language_and_file_extension(files=repo_files["files"],
-                                                 languages=[args.language])
+    file_counts, file_sizes = count_by_language_and_file_extension(
+        files=repo_files["files"],
+        languages=[args.language])
 
-    df = pd.DataFrame(list(count.items()), columns=['Key', 'Value'])
+    # Print the table showing file counts and sizes
+    data = [(key, file_counts[key], file_sizes[key]) for key in file_counts.keys()]
+    df2 = pd.DataFrame(data, columns=['Key', 'File Count', 'Total File Size'])
+    df2 = df2.sort_values(by='Total File Size', key=lambda col: col.astype(int),
+                          ascending=False)
+
+    print(df2.to_markdown(index=False))
+    print(f"| Total | {df2['File Count'].sum()} | {df2['Total File Size'].sum()} |")
+
+    # Create a pie chart for file counts only
+    df = pd.DataFrame(list(file_counts.items()), columns=['Key', 'Value'])
     df = df.sort_values(by='Value', key=lambda col: col.astype(int), ascending=False)
 
     sns.set_theme()
     colors = sns.color_palette('pastel')[0:len(df)]
 
-    # Create a pie chart
     explode = [0.05] * len(df)  # this will "explode" each slice from the pie
     df.set_index('Key')['Value'].plot.pie(autopct='%1.0f%%', colors=colors,
                                           explode=explode)
 
     plt.title(f'Remaining {args.language} files by Instrumentation')
     plt.ylabel('')
-
-    print(df.to_markdown(index=False))
-    print(f"| Total | {df['Value'].sum()} |")
 
     if args.output is not None:
         plt.savefig(args.output)

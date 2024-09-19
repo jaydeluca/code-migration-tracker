@@ -2,6 +2,8 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 from typing import List, Dict
 
+from CodeFile import CodeFile
+
 
 def get_dates_between(start_date_str, end_date, interval):
     date_format = "%Y-%m-%d"
@@ -37,17 +39,20 @@ def count_by_file_extension(files: List[str], languages: List[str]) -> dict:
     return file_counts
 
 
-def count_by_language_and_file_extension(files: List[str], languages: List[str]) -> Dict[str, Dict[str, int]]:
-    counts = defaultdict(int)
+def count_by_language_and_file_extension(files: List[CodeFile], languages: List[str]) -> Dict[str, Dict[str, int]]:
+    file_counts = defaultdict(int)
+    file_sizes = defaultdict(int)
     for file in files:
-        file_parts = file.split('/')
+        file_parts = file.path.split('/')
         if len(file_parts) < 3:
             continue
         instrumentation = file_parts[1]
         extension = file_parts[-1].split('.')[-1]
         if extension in languages:
-            counts[instrumentation] += 1
-    return counts
+            file_counts[instrumentation] += 1
+            file_sizes[instrumentation] += file.size
+    return file_counts, file_sizes
+
 
 def convert_to_plot(input_dict: dict, items):
     result = {}
