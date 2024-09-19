@@ -1,5 +1,7 @@
 from typing import List
 
+from CodeFile import CodeFile
+
 
 class DataFilter:
 
@@ -28,6 +30,20 @@ class DataFilter:
                     and self.matches_file_extensions(i["path"]) \
                     and self.matches_directory(i["path"]):
                 data_result.append(i["path"])
+
+        json_result = {
+            "files": data_result
+        }
+        return json_result
+
+    def get_file_counts_and_lengths(self, payload):
+        data_result = []
+        tree = payload["tree"]
+        for i in tree:
+            if self.matches_meta(i) \
+                    and self.matches_file_extensions(i["path"]) \
+                    and self.matches_directory(i["path"]):
+                data_result.append(CodeFile(path=i["path"], size=i["size"]))
 
         json_result = {
             "files": data_result
