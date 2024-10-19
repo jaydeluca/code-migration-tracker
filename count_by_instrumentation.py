@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import List
 import pandas as pd
 import seaborn as sns
+from datetime import timedelta
 
 import matplotlib.pyplot as plt
 import argparse
@@ -35,7 +36,12 @@ def main(args):
         keyword="test"
     )
 
-    today = datetime.now().date().strftime("%Y-%m-%dT%H:%M:%SZ")
+    today = datetime.now().date()
+
+    today_plus_one = today + timedelta(days=1)
+
+    # Format the date
+    today_plus_one_str = today_plus_one.strftime("%Y-%m-%dT%H:%M:%SZ")
 
     commit = app.get_commit_by_date(date=today, repository=args.repo)
     repo_files = app.get_repository_by_commit(

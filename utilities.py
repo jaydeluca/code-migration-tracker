@@ -20,11 +20,14 @@ def get_dates_between(start_date_str, end_date, interval):
     days_diff = (end_date - start_date).days
 
     # Generate the list of dates
-    date_list = []
+    date_list = set()
     for i in range(0, days_diff + 1, int(interval)):
         date_item = start_date + timedelta(days=i)
         start_date_str = date_item.strftime(output_format)
-        date_list.append(start_date_str)
+        date_list.add(start_date_str)
+
+    # always include today in the set
+    date_list.add(datetime.now().strftime(output_format))
 
     return date_list
 
