@@ -9,12 +9,13 @@ class TestUtilities(TestCase):
         start = "2023-01-01"
         end_date = datetime.strptime("2023-01-30", '%Y-%m-%d').date()
         interval = 7
-        expected = ['2023-01-01T00:00:00Z',
-                    '2023-01-08T00:00:00Z',
-                    '2023-01-15T00:00:00Z',
-                    '2023-01-22T00:00:00Z',
-                    '2023-01-29T00:00:00Z'
-                    ]
+        expected = {
+            '2023-01-01T00:00:00Z',
+            '2023-01-08T00:00:00Z',
+            '2023-01-15T00:00:00Z',
+            '2023-01-22T00:00:00Z',
+            '2023-01-29T00:00:00Z'
+        }
 
         result = get_dates_between(start, end_date, interval)
 
@@ -24,12 +25,13 @@ class TestUtilities(TestCase):
         start = "2023-01-01"
         end_date = "2023-01-30"
         interval = 7
-        expected = ['2023-01-01T00:00:00Z',
-                    '2023-01-08T00:00:00Z',
-                    '2023-01-15T00:00:00Z',
-                    '2023-01-22T00:00:00Z',
-                    '2023-01-29T00:00:00Z'
-                    ]
+        expected = {
+            '2023-01-01T00:00:00Z',
+            '2023-01-08T00:00:00Z',
+            '2023-01-15T00:00:00Z',
+            '2023-01-22T00:00:00Z',
+            '2023-01-29T00:00:00Z'
+        }
 
         result = get_dates_between(start, end_date, interval)
 
