@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from collections import defaultdict
 from typing import List, Dict
@@ -38,12 +39,20 @@ def count_by_file_extension(files: List[str], languages: List[str]) -> dict:
     for file in files:
         for ext in languages:
             extension = f".{ext.lower()}"
-            if file.endswith(extension):
+            if file.endswith(extension) and "grails" not in file:
                 file_counts[ext] += 1
     return file_counts
 
 
-def count_by_language_and_file_extension(files: List[CodeFile], languages: List[str]) -> Dict[str, Dict[str, int]]:
+@dataclass
+class FileCountInfo:
+    file_counts: Dict[str, int]
+    file_sizes: Dict[str, int]
+    matched_files: List[CodeFile]
+
+
+def count_by_language_and_file_extension(files: List[CodeFile], languages: List[str]) -> FileCountInfo:
+    matched_files = []
     file_counts = defaultdict(int)
     file_sizes = defaultdict(int)
     for file in files:
@@ -55,7 +64,9 @@ def count_by_language_and_file_extension(files: List[CodeFile], languages: List[
         if extension in languages:
             file_counts[instrumentation] += 1
             file_sizes[instrumentation] += file.size
-    return file_counts, file_sizes
+            matched_files.append(file.path)
+    return FileCountInfo(file_counts=file_counts, file_sizes=file_sizes,
+                         matched_files=matched_files)
 
 
 def convert_to_plot(input_dict: dict, items):

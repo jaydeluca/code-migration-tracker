@@ -13,8 +13,9 @@ from github_client import GithubClient
 
 
 class App:
-    def __init__(self, languages: List[str], path_prefix: str, keyword: str):
-        self.client = GithubClient()
+    def __init__(self, languages: List[str], path_prefix: str, keyword: str,
+                 client: GithubClient = GithubClient()):
+        self.client = client
         self.data_filter = DataFilter(languages=languages,
                                       path_prefix=path_prefix, keyword=keyword)
 
@@ -35,19 +36,22 @@ def main(args):
         keyword="test"
     )
 
-    today = datetime.now().date().strftime("%Y-%m-%dT%H:%M:%SZ")
+    today = (datetime.now().date() + pd.Timedelta(days=1)).strftime(
+        "%Y-%m-%dT%H:%M:%SZ")
 
     commit = app.get_commit_by_date(date=today, repository=args.repo)
     repo_files = app.get_repository_by_commit(
         repository=args.repo,
         commit=commit
     )
-    file_counts, file_sizes = count_by_language_and_file_extension(
+
+    file_info = count_by_language_and_file_extension(
         files=repo_files["files"],
         languages=[args.language])
 
     # Print the table showing file counts and sizes
-    data = [(key, file_counts[key], file_sizes[key]) for key in file_counts.keys()]
+    data = [(key, file_info.file_counts[key], file_info.file_sizes[key]) for key in
+            file_info.file_counts.keys()]
     df2 = pd.DataFrame(data, columns=['Key', 'File Count', 'Total File Size'])
     df2 = df2.sort_values(by='Total File Size', key=lambda col: col.astype(int),
                           ascending=False)
@@ -56,7 +60,7 @@ def main(args):
     print(f"| Total | {df2['File Count'].sum()} | {df2['Total File Size'].sum()} |")
 
     # Create a pie chart for file counts only
-    df = pd.DataFrame(list(file_counts.items()), columns=['Key', 'Value'])
+    df = pd.DataFrame(list(file_info.file_counts.items()), columns=['Key', 'Value'])
     df = df.sort_values(by='Value', key=lambda col: col.astype(int), ascending=False)
 
     sns.set_theme()
@@ -68,6 +72,10 @@ def main(args):
 
     plt.title(f'Remaining {args.language} files by Instrumentation')
     plt.ylabel('')
+
+    print("\n")
+    for item in file_info.matched_files:
+        print(item)
 
     if args.output is not None:
         plt.savefig(args.output)
