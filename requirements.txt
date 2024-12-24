@@ -7,3 +7,4 @@ ruff==0.5.7
 seaborn
 pandas
 tabulate
+six==1.17.0

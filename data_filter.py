@@ -42,6 +42,7 @@ class DataFilter:
         for i in tree:
             if self.matches_meta(i) \
                     and self.matches_file_extensions(i["path"]) \
+                    and "grails" not in i["path"] \
                     and self.matches_directory(i["path"]):
                 data_result.append(CodeFile(path=i["path"], size=i["size"]))
 

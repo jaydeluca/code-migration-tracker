@@ -10,3 +10,7 @@ tests/cache
 tests/cache/*
 
 .coverage
+
+latest-groovy.png
+latest-with-java.png
+latest-groovy-detailed.png
