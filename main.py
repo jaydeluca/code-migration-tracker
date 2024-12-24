@@ -89,6 +89,10 @@ def main(args):
 
     for lang, counts in language_counts.items():
         df = pd.DataFrame({'Date': dates, 'Count': counts})
+
+        # remove any junk data
+        df = df[df['Count'] != 0]
+
         df['Date'] = pd.to_datetime(df['Date'])
         sns.lineplot(x='Date', y='Count', label=lang.capitalize(), data=df, marker='o')
 
