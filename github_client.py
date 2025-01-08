@@ -19,7 +19,7 @@ class GithubClient(object):
         except Exception as e:
             print(e)
 
-    def get_most_recent_commit(self, repo: str, timestamp: str, branch: str) -> requests.models.Response:
+    def get_most_recent_commit(self, repo: str, timestamp: str, branch: str):
         api_url = f"{self.base_url}/repos/{repo}/commits"
 
         params = {
